@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><title>VanJS</title><meta charset="utf-8"><link rel="stylesheet" href="/master.css">
+    </head>
+    <style type="text/css" media="screen">
+#chat p { 
+  padding: 8px; 
+  margin: 0; 
+}
+#chat p:nth-child(odd) { 
+  background: #F6F6F6; 
+}
+form { 
+  background: #444; 
+  padding: 5px 10px; 
+}
+form input[type=text] { 
+  width: 98%; 
+  padding: 5px; 
+  background: #fff; 
+}
+        
+    </style>
+<body>
+    <h1>VanJS Chat Client</h1><div id="chat"></div>
+    <form id="form" onsubmit="send();return false"><input id="text" type="text" autocomplete="off"></form>
+
+<script>window.port = 80;</script>
+
+<script src="js/socket.io.js"></script>
+<script>
+
+    console.log('ok wtf')
+
+    var q = function(s){ return document.getElementById(s) }
+
+    function send(){
+        var input = q('text');
+        socket.send(input.value);
+        input.value = '';
+    }
+
+    var socket = new io.Socket('vanjs.no.de', {
+        port: window.port,
+        rememberTransport: false,
+        transports:['xhr-polling', 'jsonp-polling']
+    });
+
+    socket.on('message', function(message){
+        var el = document.createElement('p');
+        el.innerHTML = message;
+        q('chat').appendChild(el);
+        window.scrollBy(0, 9000000)
+    });
+
+    socket.connect();
+</script>
+
+</body>
+</html>
+
